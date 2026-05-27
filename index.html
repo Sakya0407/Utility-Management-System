@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utility Management System - Enhanced</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            opacity: 0.95;
+            font-size: 1.1em;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+            background: #f8f9fa;
+            flex-wrap: wrap;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .nav button {
+            padding: 12px 25px;
+            border: none;
+            background: #667eea;
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .nav button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .nav button.active {
+            background: #764ba2;
+            box-shadow: 0 5px 15px rgba(118, 75, 162, 0.4);
+        }
+
+        .content {
+            padding: 30px;
+            min-height: 600px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card h3 {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-card .number {
+            font-size: 2.5em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px solid #e9ecef;
+        }
+
+        .form-section h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            background: #667eea;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+
+        th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #e0e0e0;
+            transition: background 0.3s;
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-paid {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-unpaid {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-overdue {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-partial {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            animation: slideIn 0.5s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85em;
+            margin-right: 5px;
+            transition: all 0.3s;
+        }
+
+        .action-btn.view {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .action-btn.view:hover {
+            background: #138496;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .modal-header h2 {
+            color: #667eea;
+        }
+
+        .close-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .close-btn:hover {
+            background: #c82333;
+        }
+
+        .report-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .report-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .nav {
+                flex-direction: column;
+            }
+
+            .nav button {
+                width: 100%;
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .empty-state svg {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚡ Utility Management System</h1>
+            <p>Complete Billing & Customer Management Solution</p>
+        </div>
+
+        <div class="nav">
+            <button onclick="showSection('dashboard')" class="active">📊 Dashboard</button>
+            <button onclick="showSection('customers')">👥 Customers</button>
+            <button onclick="showSection('meters')">⚡ Meters</button>
+            <button onclick="showSection('readings')">📈 Meter Readings</button>
+            <button onclick="showSection('bills')">📄 Bills</button>
+            <button onclick="showSection('payments')">💳 Payments</button>
+            <button onclick="showSection('reports')">📊 Reports</button>
+        </div>
+
+        <div class="content">
+            <!-- Dashboard Section -->
+            <div id="dashboard" class="section active">
+                <h2>📊 Dashboard Overview</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Active Customers</h3>
+                        <div class="number" id="totalCustomers">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Monthly Revenue</h3>
+                        <div class="number" id="monthlyRevenue">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Unpaid Bills</h3>
+                        <div class="number" id="unpaidBills">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Meters</h3>
+                        <div class="number" id="totalMeters">-</div>
+                    </div>
+                </div>
+
+                <div class="report-section">
+                    <h3>⚠️ Recent Unpaid Bills</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Bill ID</th>
+                                    <th>Customer</th>
+                                    <th>Utility</th>
+                                    <th>Amount</th>
+                                    <th>Due Date</th>
+                                    <th>Days Overdue</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="unpaidBillsTable">
+                                <tr><td colspan="7" class="loading">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customers Section -->
+            <div id="customers" class="section">
+                <h2>👥 Customer Management</h2>
+                
+                <div id="customerMessage"></div>
+
+                <div class="form-section">
+                    <h3>➕ Add New Customer</h3>
+                    <form id="customerForm" onsubmit="addCustomer(event)">
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>Customer Name *</label>
+                                <input type="text" name="CustomerName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Customer Type *</label>
+                                <select name="CustomerType" required>
+                                    <option value="">Select Type</option>
+                                    <option value="Residential">Residential</option>
+                                    <option value="Commercial">Commercial</option>
+                                    <option value="Industrial">Industrial</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Address *</label>
+                            <input type="text" name="Address" required>
+                        </div>
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>Phone *</label>
+                                <input type="tel" name="Phone" pattern="[0-9]{10}" placeholder="0771234567" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" name="Email">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn">Add Customer</button>
+                    </form>
+                </div>
+
+                <div class="search-box">
+                    <input type="text" id="customerSearch" placeholder="🔍 Search customers by name, phone, or email..." onkeyup="searchCustomers()">
+                </div>
+
+                <div class="report-section">
+                    <h3>All Customers</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Registration Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customersTable">
+                                <tr><td colspan="8" class="loading">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meters Section -->
+            <div id="meters" class="section">
+                <h2>⚡ Meter Management</h2>
+                
+                <div id="meterMessage"></div>
+
+                <div class="report-section">
+                    <h3>All Meters</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Meter ID</th>
+                                    <th>Meter Number</th>
+                                    <th>Customer</th>
+                                    <th>Utility Type</th>
+                                    <th>Installation Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="metersTable">
+                                <tr><td colspan="6" class="loading">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meter Readings Section -->
+            <div id="readings" class="section">
+                <h2>📈 Meter Readings</h2>
+                
+                <div id="readingMessage"></div>
+
+                <div class="form-section">
+                    <h3>➕ Add New Meter Reading</h3>
+                    <form id="readingForm" onsubmit="addReading(event)">
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>Meter *</label>
+                                <select name="MeterID" id="meterSelect" required>
+                                    <option value="">Select Meter</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Reading Date *</label>
+                                <input type="date" name="ReadingDate" required>
+                            </div>
+                        </div>
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>Previous Reading *</label>
+                                <input type="number" step="0.01" name="PreviousReading" id="prevReading" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Current Reading *</label>
+                                <input type="number" step="0.01" name="CurrentReading" required>
+                            </div>
+                        </div>
+                        <div class="grid-3">
+                            <div class="form-group">
+                                <label>Reading Month *</label>
+                                <select name="ReadingMonth" required>
+                                    <option value="">Select Month</option>
+                                    <option value="1">January</option>
+                                    <option value="2">February</option>
+                                    <option value="3">March</option>
+                                    <option value="4">April</option>
+                                    <option value="5">May</option>
+                                    <option value="6">June</option>
+                                    <option value="7">July</option>
+                                    <option value="8">August</option>
+                                    <option value="9">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Reading Year *</label>
+                                <input type="number" name="ReadingYear" value="2024" min="2020" max="2030" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Recorded By *</label>
+                                <input type="text" name="RecordedBy" placeholder="Field Officer Name" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success">Add Reading & Generate Bill</button>
+                    </form>
+                </div>
+
+                <div class="report-section">
+                    <h3>Recent Meter Readings</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Reading ID</th>
+                                    <th>Meter Number</th>
+                                    <th>Customer</th>
+                                    <th>Previous</th>
+                                    <th>Current</th>
+                                    <th>Consumption</th>
+                                    <th>Reading Date</th>
+                                    <th>Recorded By</th>
+                                </tr>
+                            </thead>
+                            <tbody id="readingsTable">
+                                <tr><td colspan="8" class="loading">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bills Section -->
+            <div id="bills" class="section">
+                <h2>📄 Bill Management</h2>
+                
+                <div class="search-box">
+                    <input type="text" id="billSearch" placeholder="🔍 Search bills by customer name or bill ID..." onkeyup="searchBills()">
+                </div>
+
+                <div class="report-section">
+                    <h3>All Bills</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Bill ID</th>
+                                    <th>Customer</th>
+                                    <th>Utility</th>
+                                    <th>Month/Year</th>
+                                    <th>Consumption</th>
+                                    <th>Amount</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="billsTable">
+                                <tr><td colspan="8" class="loading">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payments Section -->
+            <div id="payments" class="section">
+                <h2>💳 Payment Processing</h2>
+                
+                <div id="paymentMessage"></div>
+
+                <div class="form-section">
+                    <h3>➕ Record New Payment</h3>
+                    <form id="paymentForm" onsubmit="addPayment(event)">
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>Bill ID *</label>
+                                <input type="number" name="BillID" id="paymentBillID" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Customer ID *</label>
+                                <input type="number" name="CustomerID" id="paymentCustomerID" required>
+                            </div>
+                        </div>
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>Amount Paid (LKR) *</label>
+                                <input type="number" step="0.01" name="AmountPaid" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Payment Method *</label>
+                                <select name="PaymentMethod" required>
+                                    <option value="">Select Method</option>
+                                    <option value="Cash">Cash</option>
+                                    <option value="Credit Card">Credit Card</option>
+                                    <option value="Debit Card">Debit Card</option>
+                                    <option value="Bank Transfer">Bank Transfer</option>
+                                    <option value="Check">Check</option>
+                                    <option value="Online">Online Payment</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>Transaction Reference</label>
+                                <input type="text" name="TransactionReference" placeholder="e.g., TXN-2024-001">
+                            </div>
+                            <div class="form-group">
+                                <label>Processed By *</label>
+                                <input type="text" name="ProcessedBy" placeholder="Cashier Name" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success">Record Payment</button>
+                    </form>
+                </div>
+
+                <div class="report-section">
+                    <h3>Recent Payments</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Payment ID</th>
+                                    <th>Bill ID</th>
+                                    <th>Customer</th>
+                                    <th>Amount Paid</th>
+                                    <th>Payment Method</th>
+                                    <th>Payment Date</th>
+                                    <th>Processed By</th>
+                                </tr>
+                            </thead>
+                            <tbody id="paymentsTable">
+                                <tr><td colspan="7" class="loading">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Section -->
+            <div id="reports" class="section">
+                <h2>📊 Reports & Analytics</h2>
+
+                <div class="report-section">
+                    <h3>🔴 Defaulters Report</h3>
+                    <button onclick="loadDefaulters()" class="btn" style="margin-bottom: 15px;">Generate Defaulters Report</button>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Customer ID</th>
+                                    <th>Customer Name</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Overdue Bills</th>
+                                    <th>Total Amount</th>
+                                    <th>Max Days Overdue</th>
+                                </tr>
+                            </thead>
+                            <tbody id="defaultersTable">
+                                <tr><td colspan="7" class="empty-state">Click "Generate Report" to view defaulters</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="report-section">
+                    <h3>📈 Monthly Consumption Report</h3>
+                    <div class="grid-2" style="margin-bottom: 15px;">
+                        <div class="form-group">
+                            <label>Month</label>
+                            <select id="reportMonth">
+                                <option value="1">January</option>
+                                <option value="2">February</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10" selected>October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Year</label>
+                            <input type="number" id="reportYear" value="2024" min="2020" max="2030">
+                        </div>
+                    </div>
+                    <button onclick="loadConsumptionReport()" class="btn" style="margin-bottom: 15px;">Generate Consumption Report</button>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Customer</th>
+                                    <th>Type</th>
+                                    <th>Utility</th>
+                                    <th>Total Consumption</th>
+                                    <th>Number of Meters</th>
+                                    <th>Total Bill Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="consumptionTable">
+                                <tr><td colspan="6" class="empty-state">Select month and year, then click "Generate Report"</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Details Modal -->
+    <div id="customerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Customer Details</h2>
+                <button class="close-btn" onclick="closeModal('customerModal')">Close</button>
+            </div>
+            <div id="customerModalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+
+        // ===== NAVIGATION =====
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+
+            // Load data for each section
+            if (sectionId === 'dashboard') loadDashboard();
+            if (sectionId === 'customers') loadCustomers();
+            if (sectionId === 'meters') loadMeters();
+            if (sectionId === 'readings') {
+                loadReadings();
+                loadMetersForDropdown();
+            }
+            if (sectionId === 'bills') loadAllBills();
+            if (sectionId === 'payments') loadPayments();
+        }
+
+        // ===== DASHBOARD =====
+        async function loadDashboard() {
+            try {
+                const response = await fetch(`${API_URL}/dashboard/stats`);
+                const data = await response.json();
+                
+                document.getElementById('totalCustomers').textContent = data.totalCustomers;
+                document.getElementById('monthlyRevenue').textContent = 'LKR ' + data.monthlyRevenue.toFixed(2);
+                document.getElementById('unpaidBills').textContent = data.unpaidBills;
+                document.getElementById('totalMeters').textContent = data.totalMeters;
+
+                loadUnpaidBillsTable();
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+
+        async function loadUnpaidBillsTable() {
+            try {
+                const response = await fetch(`${API_URL}/bills/unpaid`);
+                const bills = await response.json();
+                
+                const tbody = document.getElementById('unpaidBillsTable');
+                if (bills.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No unpaid bills</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = bills.slice(0, 10).map(bill => `
+                    <tr>
+                        <td>${bill.BillID}</td>
+                        <td>${bill.CustomerName}</td>
+                        <td>${bill.UtilityName}</td>
+                        <td>LKR ${bill.TotalAmount.toFixed(2)}</td>
+                        <td>${new Date(bill.DueDate).toLocaleDateString()}</td>
+                        <td>${bill.DaysOverdue || 0}</td>
+                        <td><span class="status-badge status-${bill.Status.toLowerCase()}">${bill.Status}</span></td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading unpaid bills:', error);
+            }
+        }
+
+        // ===== CUSTOMERS =====
+        let allCustomers = [];
+
+        async function loadCustomers() {
+            try {
+                const response = await fetch(`${API_URL}/customers`);
+                allCustomers = await response.json();
+                displayCustomers(allCustomers);
+            } catch (error) {
+                console.error('Error loading customers:', error);
+                document.getElementById('customersTable').innerHTML = 
+                    '<tr><td colspan="8" class="error">Error loading customers</td></tr>';
+            }
+        }
+
+        function displayCustomers(customers) {
+            const tbody = document.getElementById('customersTable');
+            if (customers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No customers found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = customers.map(customer => `
+                <tr>
+                    <td>${customer.CustomerID}</td>
+                    <td>${customer.CustomerName}</td>
+                    <td>${customer.CustomerType}</td>
+                    <td>${customer.Phone}</td>
+                    <td>${customer.Email || '-'}</td>
+                    <td>${new Date(customer.RegistrationDate).toLocaleDateString()}</td>
+                    <td><span class="status-badge status-${customer.Status.toLowerCase()}">${customer.Status}</span></td>
+                    <td>
+                        <button class="action-btn view" onclick="viewCustomerDetails(${customer.CustomerID})">View</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function searchCustomers() {
+            const searchTerm = document.getElementById('customerSearch').value.toLowerCase();
+            const filtered = allCustomers.filter(c => 
+                c.CustomerName.toLowerCase().includes(searchTerm) ||
+                c.Phone.includes(searchTerm) ||
+                (c.Email && c.Email.toLowerCase().includes(searchTerm))
+            );
+            displayCustomers(filtered);
+        }
+
+        async function addCustomer(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+
+            try {
+                const response = await fetch(`${API_URL}/customers`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('customerMessage', 'Customer added successfully!', 'success');
+                    form.reset();
+                    loadCustomers();
+                } else {
+                    showMessage('customerMessage', 'Error: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showMessage('customerMessage', 'Error adding customer: ' + error.message, 'error');
+            }
+        }
+
+        async function viewCustomerDetails(customerID) {
+            try {
+                const response = await fetch(`${API_URL}/customers/${customerID}/bills`);
+                const bills = await response.json();
+                
+                const content = document.getElementById('customerModalContent');
+                content.innerHTML = `
+                    <h3>Bills for Customer #${customerID}</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Bill ID</th>
+                                <th>Month/Year</th>
+                                <th>Utility</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${bills.map(bill => `
+                                <tr>
+                                    <td>${bill.BillID}</td>
+                                    <td>${bill.BillingMonth}/${bill.BillingYear}</td>
+                                    <td>${bill.UtilityName}</td>
+                                    <td>LKR ${bill.TotalAmount.toFixed(2)}</td>
+                                    <td><span class="status-badge status-${bill.Status.toLowerCase()}">${bill.Status}</span></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+                
+                document.getElementById('customerModal').classList.add('active');
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // ===== METERS =====
+        async function loadMeters() {
+            try {
+                const response = await fetch(`${API_URL}/meters`);
+                const meters = await response.json();
+                
+                const tbody = document.getElementById('metersTable');
+                if (meters.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No meters found</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = meters.map(meter => `
+                    <tr>
+                        <td>${meter.MeterID}</td>
+                        <td>${meter.MeterNumber}</td>
+                        <td>${meter.CustomerName}</td>
+                        <td>${meter.UtilityName}</td>
+                        <td>${new Date(meter.InstallationDate).toLocaleDateString()}</td>
+                        <td><span class="status-badge status-${meter.MeterStatus.toLowerCase()}">${meter.MeterStatus}</span></td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading meters:', error);
+            }
+        }
+
+        // ===== METER READINGS =====
+        async function loadReadings() {
+            try {
+                const response = await fetch(`${API_URL}/readings`);
+                const readings = await response.json();
+                
+                const tbody = document.getElementById('readingsTable');
+                if (readings.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No readings found</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = readings.map(reading => `
+                    <tr>
+                        <td>${reading.ReadingID}</td>
+                        <td>${reading.MeterNumber}</td>
+                        <td>${reading.CustomerName}</td>
+                        <td>${reading.PreviousReading}</td>
+                        <td>${reading.CurrentReading}</td>
+                        <td><strong>${reading.ConsumptionUnits}</strong></td>
+                        <td>${new Date(reading.ReadingDate).toLocaleDateString()}</td>
+                        <td>${reading.RecordedBy}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading readings:', error);
+            }
+        }
+
+        async function loadMetersForDropdown() {
+            try {
+                const response = await fetch(`${API_URL}/meters/simple`);
+                const meters = await response.json();
+                
+                const select = document.getElementById('meterSelect');
+                select.innerHTML = '<option value="">Select Meter</option>' + 
+                    meters.map(m => `
+                        <option value="${m.MeterID}" data-last="${m.LastReading}">
+                            ${m.MeterNumber} - ${m.CustomerName} (${m.UtilityName})
+                        </option>
+                    `).join('');
+                
+                // Auto-fill previous reading when meter is selected
+                select.addEventListener('change', function() {
+                    const selected = this.options[this.selectedIndex];
+                    if (selected.value) {
+                        document.getElementById('prevReading').value = selected.dataset.last;
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading meters:', error);
+            }
+        }
+
+        async function addReading(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+
+            try {
+                const response = await fetch(`${API_URL}/readings`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('readingMessage', 'Meter reading added and bill generated successfully!', 'success');
+                    form.reset();
+                    loadReadings();
+                } else {
+                    showMessage('readingMessage', 'Error: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showMessage('readingMessage', 'Error adding reading: ' + error.message, 'error');
+            }
+        }
+
+        // ===== BILLS =====
+        let allBills = [];
+
+        async function loadAllBills() {
+            try {
+                const response = await fetch(`${API_URL}/bills`);
+                allBills = await response.json();
+                displayBills(allBills);
+            } catch (error) {
+                console.error('Error loading bills:', error);
+            }
+        }
+
+        function displayBills(bills) {
+            const tbody = document.getElementById('billsTable');
+            if (bills.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No bills found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = bills.map(bill => `
+                <tr>
+                    <td>${bill.BillID}</td>
+                    <td>${bill.CustomerName}</td>
+                    <td>${bill.UtilityName}</td>
+                    <td>${bill.BillingMonth}/${bill.BillingYear}</td>
+                    <td>${bill.ConsumptionUnits} ${bill.UtilityName === 'Electricity' ? 'kWh' : bill.UtilityName === 'Water' ? 'm³' : 'units'}</td>
+                    <td>LKR ${bill.TotalAmount.toFixed(2)}</td>
+                    <td>${new Date(bill.DueDate).toLocaleDateString()}</td>
+                    <td><span class="status-badge status-${bill.Status.toLowerCase()}">${bill.Status}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function searchBills() {
+            const searchTerm = document.getElementById('billSearch').value.toLowerCase();
+            const filtered = allBills.filter(b => 
+                b.CustomerName.toLowerCase().includes(searchTerm) ||
+                b.BillID.toString().includes(searchTerm)
+            );
+            displayBills(filtered);
+        }
+
+        // ===== PAYMENTS =====
+        async function loadPayments() {
+            try {
+                const response = await fetch(`${API_URL}/payments`);
+                const payments = await response.json();
+                
+                const tbody = document.getElementById('paymentsTable');
+                if (payments.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No payments found</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = payments.map(payment => `
+                    <tr>
+                        <td>${payment.PaymentID}</td>
+                        <td>${payment.BillID}</td>
+                        <td>${payment.CustomerName}</td>
+                        <td>LKR ${payment.AmountPaid.toFixed(2)}</td>
+                        <td>${payment.PaymentMethod}</td>
+                        <td>${new Date(payment.PaymentDate).toLocaleDateString()}</td>
+                        <td>${payment.ProcessedBy}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading payments:', error);
+            }
+        }
+
+        async function addPayment(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+
+            try {
+                const response = await fetch(`${API_URL}/payments`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('paymentMessage', 'Payment recorded successfully!', 'success');
+                    form.reset();
+                    loadPayments();
+                    loadDashboard(); // Refresh dashboard stats
+                } else {
+                    showMessage('paymentMessage', 'Error: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showMessage('paymentMessage', 'Error recording payment: ' + error.message, 'error');
+            }
+        }
+
+        // ===== REPORTS =====
+        async function loadDefaulters() {
+            try {
+                const response = await fetch(`${API_URL}/reports/defaulters?days=30`);
+                const defaulters = await response.json();
+                
+                const tbody = document.getElementById('defaultersTable');
+                if (defaulters.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No defaulters found</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = defaulters.map(d => `
+                    <tr>
+                        <td>${d.CustomerID}</td>
+                        <td>${d.CustomerName}</td>
+                        <td>${d.Phone}</td>
+                        <td>${d.Email || '-'}</td>
+                        <td>${d.OverdueBills}</td>
+                        <td>LKR ${d.TotalOverdueAmount.toFixed(2)}</td>
+                        <td>${d.MaxDaysOverdue}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading defaulters:', error);
+            }
+        }
+
+        async function loadConsumptionReport() {
+            const month = document.getElementById('reportMonth').value;
+            const year = document.getElementById('reportYear').value;
+            
+            try {
+                const response = await fetch(`${API_URL}/reports/consumption?month=${month}&year=${year}`);
+                const data = await response.json();
+                
+                const tbody = document.getElementById('consumptionTable');
+                if (data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No data found for selected period</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = data.map(d => `
+                    <tr>
+                        <td>${d.CustomerName}</td>
+                        <td>${d.CustomerType}</td>
+                        <td>${d.UtilityName}</td>
+                        <td>${d.TotalConsumption}</td>
+                        <td>${d.NumberOfMeters}</td>
+                        <td>LKR ${(d.TotalBillAmount || 0).toFixed(2)}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading consumption report:', error);
+            }
+        }
+
+        // ===== UTILITY FUNCTIONS =====
+        function showMessage(elementId, message, type) {
+            const messageDiv = document.getElementById(elementId);
+            messageDiv.innerHTML = `<div class="message ${type}">${message}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 5000);
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Load dashboard on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadDashboard();
+        });
+    </script>
+</body>
+</html>
